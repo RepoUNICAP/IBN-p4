@@ -43,7 +43,7 @@ def entender(frase):
     m = re.search(r"(\d+\.\d+\.\d+\.\d+|\bh\d\b)", f)
     ip = HOSTS.get(m.group(1), m.group(1)) if m else None
 
-    if re.search(r"varredura|scan|malicios|suspeit", f):
+    if re.search(r"varredura|scan|malicios|suspeit|maltrapilh", f):
         if re.search(r"parar|desativar|desligar|liberar|desbloquear", f):
             return {"acao": "desligar_detector"}
         n = re.search(r"mais de (\d+)", f)

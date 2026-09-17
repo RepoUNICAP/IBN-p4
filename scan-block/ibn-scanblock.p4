@@ -93,7 +93,7 @@ parser MyParser(packet_in packet,
     state parse_ipv4 {
         packet.extract(hdr.ipv4);
         transition select(hdr.ipv4.protocol) {
-            PROTO_TCP: parse_tcp;   /* novo: se for TCP, pega o header TCP */
+            PROTO_TCP: parse_tcp;   /* se for TCP, pega o header TCP */
             default: accept;
         }
     }
@@ -133,7 +133,7 @@ control MyIngress(inout headers hdr,
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
     }
 
-    /* intencao "bloquear host X": o controlador faz table_add acl drop X */
+    /* se a intenção é bloquear, na tabela iremos adicionar */
     table acl {
         key = {
             hdr.ipv4.srcAddr: exact;
