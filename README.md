@@ -24,21 +24,21 @@ Para isso, visualizamos uma problemática que já havíamos visto na área de se
 ---------
 
 O projeto tem duas partes que se comunicam:
-- **[ibn-scanblock.p4](https://file+.vscode-resource.vscode-cdn.net/home/raf/GitRepositories/Estudos/IBN-p4/ibn-scanblock.p4)** - Programa p4 que roda no switch (BMv2)
-- **[ntent.py](https://file+.vscode-resource.vscode-cdn.net/home/raf/GitRepositories/Estudos/IBN-p4/intent.py)** - Controlador da IBN (interpretador e tradutor)
+- **[ibn-scanblock.p4](https://github.com/RepoUNICAP/IBN-p4/blob/main/scan-block/ibn-scanblock.p4)** - Programa p4 que roda no switch (BMv2)
+- **[intent.py](https://github.com/RepoUNICAP/IBN-p4/blob/main/scan-block/intent.py)** - Controlador da IBN (interpretador e tradutor)
 
 # ☱Estrutura do repositório
 ------ 
 
 |Arquivo|Descrição|
 |---|---|
-|[scan-block/ibn-scanblock.p4](https://file+.vscode-resource.vscode-cdn.net/home/raf/GitRepositories/Estudos/IBN-p4/scan-block/ibn-scanblock.p4)|Programa P4: parser, contagem de SYNs, ACL manual|
-|[scan-block/intent.py](https://file+.vscode-resource.vscode-cdn.net/home/raf/GitRepositories/Estudos/IBN-p4/scan-block/intent.py)|Controlador IBN: Interpretador de intenção, aplicação no switch, status|
-|[scan-block/receive.py](https://file+.vscode-resource.vscode-cdn.net/home/raf/GitRepositories/Estudos/IBN-p4/scan-block/receive.py)|Roda no host receptor e mostra, em tempo real, os pacotes TCP chegando|
-|[scan-block/topology.json](https://file+.vscode-resource.vscode-cdn.net/home/raf/GitRepositories/Estudos/IBN-p4/scan-block/topology.json)|Topologia Mininet: hosts h1/h2/h3 ligados a um switch s1|
-|[scan-block/s1-runtime.json](https://file+.vscode-resource.vscode-cdn.net/home/raf/GitRepositories/Estudos/IBN-p4/scan-block/s1-runtime.json)|Entradas de tabela (P4Runtime) - forwarding L2/L3 pra h1, h2 e h3|
-|[scan-block/Makefile](https://file+.vscode-resource.vscode-cdn.net/home/raf/GitRepositories/Estudos/IBN-p4/scan-block/Makefile)|Makefile padrão dos tutoriais do p4lang - compilador .p4 e sobe topologia|
-|[scan-block/documentacaoPratica.md](https://file+.vscode-resource.vscode-cdn.net/home/raf/GitRepositories/Estudos/IBN-p4/scan-block/documentacaoPratica.md)|Relatório da parte prática|
+|[scan-block/ibn-scanblock.p4](https://github.com/RepoUNICAP/IBN-p4/blob/main/scan-block/ibn-scanblock.p4)|Programa P4: parser, contagem de SYNs, ACL manual|
+|[scan-block/intent.py](https://github.com/RepoUNICAP/IBN-p4/blob/main/scan-block/intent.py)|Controlador IBN: Interpretador de intenção, aplicação no switch, status|
+|[scan-block/receive.py](https://github.com/RepoUNICAP/IBN-p4/blob/main/scan-block/receive.py)|Roda no host receptor e mostra, em tempo real, os pacotes TCP chegando|
+|[scan-block/topology.json](https://github.com/RepoUNICAP/IBN-p4/blob/main/scan-block/topology.json)|Topologia Mininet: hosts h1/h2/h3 ligados a um switch s1|
+|[scan-block/s1-runtime.json](https://github.com/RepoUNICAP/IBN-p4/blob/main/scan-block/s1-runtime.json)|Entradas de tabela (P4Runtime) - forwarding L2/L3 pra h1, h2 e h3|
+|[scan-block/Makefile](https://github.com/RepoUNICAP/IBN-p4/blob/main/scan-block/Makefile)|Makefile padrão dos tutoriais do p4lang - compilador .p4 e sobe topologia|
+|[scan-block/DocPratica/documentacaoPratica.md](https://github.com/RepoUNICAP/IBN-p4/blob/main/scan-block/DocPratica/documentacaoPratica.md)|Relatório da parte prática|
 
 # ☱Como rodar?
 --- 

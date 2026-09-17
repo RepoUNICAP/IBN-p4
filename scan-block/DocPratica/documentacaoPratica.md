@@ -4,7 +4,7 @@
 # ☱Topologia
 ------
 
-![topologia](~/img/topologia-p4.png)
+![topologia](../../img/topologia-p4.png)
 
   
 
@@ -50,38 +50,38 @@ Se um prazo (`duracao`) for definido, é o próprio switch que verifica pelos re
 
 ------
 
-1. ![Estrutura de arquivos do projeto](../img/pasta.png)
+1. ![Estrutura de arquivos do projeto](../../img/pasta.png)
    *Pasta de arquivos*
 
-2. ![Topologia subindo e controlador iniciado](../img/inicioTopo-mininet-intent.png)
+2. ![Topologia subindo e controlador iniciado](../../img/inicioTopo-mininet-intent.png)
    *`make run` sobe a topologia e `intent.py` é iniciado*
 
-3. ![pingall](../img/pingall.png)
+3. ![pingall](../../img/pingall.png)
    *`pingall` confirma que a topologia e o encaminhamento L3 do switch estão funcionando*
 
-4. ![Status inicial](../img/statusInicio.png)
+4. ![Status inicial](../../img/statusInicio.png)
    *`status` inicial: detector desligado, nenhum host bloqueado e nenhuma intenção ativa*
 
-5. ![receive.py aguardando tráfego](../img/receiveSempacote.png)
+5. ![receive.py aguardando tráfego](../../img/receiveSempacote.png)
    *`receive.py` rodando em h2, só de olho no tráfego TCP (nenhum pacote foi enviado ainda)*
 
-6. ![h1 fazendo SYN scan em h2](../img/h2Receiveh1Stealth.png)
+6. ![h1 fazendo SYN scan em h2](../../img/h2Receiveh1Stealth.png)
    *h1 faz um SYN scan (half-open, `nmap -sS`) em h2; em h2, o `receive.py` mostra os SYNs chegando e os SYN-ACK/RST, porta por porta*
 
-7. ![Status pós-nmap](../img/StatusPosNmap.png)
+7. ![Status pós-nmap](../../img/StatusPosNmap.png)
    *Depois do scan completo, o `status` mostra que o switch já somou ao contador os 100 SYNs de h1 na janela*
 
-8. ![Ativando o detector automático](../img/acaoBlock.png)
+8. ![Ativando o detector automático](../../img/acaoBlock.png)
    *A intenção "bloquear todos os ips maliciosos" liga o detector automático: o controlador escreve o limite de 20 SYNs(padrão) e a duração (0 = bloqueio I N D E F I N I D O) direto nos registradores do switch*
 
-9. ![nmap após o bloqueio](../img/nmapPosBlock.png)
+9. ![nmap após o bloqueio](../../img/nmapPosBlock.png)
    *Com o detector automático ativo, o nmap só recebe resposta nas primeiras 20 portas (como foi definido antes) , o switch começa a dropar tudo dele, e o resto das portas dão como "no-response"*
 
-10. ![Detector flagrou o IP malicioso](../img/statusDetect.png)
+10. ![Detector flagrou o IP malicioso](../../img/statusDetect.png)
     *O `status` confirma que h1 ultrapassou os 20 SYNs permitidos e foi automaticamente marcado como BLOQUEADO pelo detector*
 
-11. ![Desbloqueando os IPs maliciosos](../img/desbloquearMaltrapilhos.png)
+11. ![Desbloqueando os IPs maliciosos](../../img/desbloquearMaltrapilhos.png)
     *A intenção "desbloquear ips maliciosos" desliga o detector automático e zera os registradores de contagem e bloqueio. h1 pode praticar o mal novamente*
 
-12. ![Bloqueio manual com prazo](../img/BlockTime.png)
+12. ![Bloqueio manual com prazo](../../img/BlockTime.png)
     *Ao pedir "bloquear h1 por 20 segundos", o controlador agenda a liberação, passados os 20s, é o `threading.Timer` do próprio `intent.py` que manda o comando `liberar` sozinho, sem o operador precisar pedir de novo (esse é o caso do bloqueio feito manualmente — diferente do detector automático, nesse caso quem controla o tempo é o controlador, não o switch).*
