@@ -62,14 +62,14 @@ def entender(frase):
 # dicionario paiton
 
 def traduzir(i):
-    if i["acao"] == "detectar_scan": //detect
+    if i["acao"] == "detectar_scan":  # detect
         return [f"register_write MyIngress.limite 0 {i['limite']}",
                 f"register_write MyIngress.duracao 0 {i['duracao_s'] * 1000000}"]
-    if i["acao"] == "desligar_detector": // parôôoô
+    if i["acao"] == "desligar_detector":  # parôôoô
         return ["register_write MyIngress.limite 0 0",
                 "register_reset MyIngress.syn_count",
                 "register_reset MyIngress.bloqueado"]
-    if i["acao"] == "bloquear": //bloqueia o host
+    if i["acao"] == "bloquear":  # bloqueia o host
         return [f"table_add MyIngress.acl MyIngress.drop {i['host']} =>"]
     if i["acao"] == "liberar":
         h = handle_de(i["host"])
