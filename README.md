@@ -7,9 +7,9 @@ Projeto feito visando a aplicação real de uma rede baseada em intenção (IBN)
 - Eduardo Costa Braga
 - Henrique Franca Alves de Lima
 - Isabela Medeiros Belo Lopes
-- Julia Vilela Cintra Galvão
+- Júlia Vilela Cintra Galvão
 - Rafael Viana Angelim
-- Reuel
+- Reuel Lucas Bezerra Alencar
 # ☱Premissa
 ------ 
 
