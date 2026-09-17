@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
-"""
-intent.py - controlador de intencoes minimo.
 
-    frase  ->  entender()  ->  JSON  ->  traduzir()  ->  comandos  ->  simple_switch_CLI
+# ESQUELETO DO CODIGO BASEADO EM: P4I/O - Intent-Based Networking with P4
+# (https://research.tudelft.nl/en/publications/p4io-intent-based-networking-with-p4/)
+# e no listener do riftadi: https://github.com/riftadi/p4io/blob/master/src/intent_listener.py
 
-Uso (com o 'make run' rodando em outro terminal):
-    python3 intent.py                         # interativo
-    python3 intent.py "bloquear varreduras"   # uma intencao
-"""
 import json
 import re
 import socket
@@ -18,16 +14,15 @@ import zlib
 
 HOSTS = {"h1": "10.0.1.1", "h2": "10.0.2.2", "h3": "10.0.3.3"}
 LIMITE_PADRAO = 20
-ATIVAS = {}          # intencoes em vigor: {"scan": frase} ou {ip: frase}
-
+ATIVAS = {}  #intencoees
 
 def idx_de(ip):
-    """mesmo indice que o P4 calcula: crc32(IP) % 1024"""
+    # calcula exatamente o mesmo indice que o p4
     return zlib.crc32(socket.inet_aton(ip)) % 1024
 
 
 def duracao_em(frase):
-    """'por 30 segundos' / 'por 2 minutos' -> segundos; sem prazo -> 0 (indefinido)"""
+    # min pra segundos, segundos pra segundos, nada pra 0
     m = re.search(r"por (\d+)\s*(s\b|seg|segundos|min|minutos)", frase)
     if not m:
         return 0
@@ -35,13 +30,14 @@ def duracao_em(frase):
 
 
 def cli(cmd):
-    """manda UMA linha para o simple_switch_CLI (porta thrift 9090) e devolve a saida"""
+    # manda UMA unidade de uma sequencia d epontos para o simple_switch_CLI 
     p = subprocess.run(["simple_switch_CLI", "--thrift-port", "9090"],
                        input=cmd + "\n", capture_output=True, text=True)
     return p.stdout.replace("RuntimeCmd: ", "").strip()
 
+################  C A P T A Ç Ã O   D E   I N T E N Ç Ã O  #############
+# traduz a frase pra intenção do cara
 
-# ---------- [1] captar a intencao: frase -> JSON ----------
 def entender(frase):
     f = frase.lower()
     m = re.search(r"(\d+\.\d+\.\d+\.\d+|\bh\d\b)", f)
@@ -52,9 +48,9 @@ def entender(frase):
             return {"acao": "desligar_detector"}
         n = re.search(r"mais de (\d+)", f)
         return {"acao": "detectar_scan", "limite": int(n.group(1)) if n else LIMITE_PADRAO,
-                "duracao_s": duracao_em(f)}          # 0 = bloqueia ate alguem liberar
-    if ip and re.search(r"liberar|desbloquear|permitir", f):      # antes de "bloquear":
-        return {"acao": "liberar", "host": ip}                       # "desbloquear" contem "bloquear"
+                "duracao_s": duracao_em(f)} # 0 = bloqueia ate alguem liberar
+    if ip and re.search(r"liberar|desbloquear|permitir", f): # antes de "bloquear":
+        return {"acao": "liberar", "host": ip}                       
     if ip and re.search(r"\b(bloquear|barrar)\b", f):
         return {"acao": "bloquear", "host": ip, "duracao_s": duracao_em(f)}
     if re.search(r"status|bloqueado|mostrar", f):
@@ -62,17 +58,18 @@ def entender(frase):
     raise ValueError("nao entendi. Exemplos: 'bloquear todos os ips maliciosos', "
                      "'bloquear h1', 'liberar h1', 'parar de bloquear varreduras', 'status'")
 
+################  T R A D U Ç Ã O   E   A P L I C A Ç Ã O  #############
+# dicionario paiton
 
-# ---------- [2] traduzir: JSON -> comandos do switch ----------
 def traduzir(i):
-    if i["acao"] == "detectar_scan":
+    if i["acao"] == "detectar_scan": //detect
         return [f"register_write MyIngress.limite 0 {i['limite']}",
                 f"register_write MyIngress.duracao 0 {i['duracao_s'] * 1000000}"]
-    if i["acao"] == "desligar_detector":
+    if i["acao"] == "desligar_detector": // parôôoô
         return ["register_write MyIngress.limite 0 0",
                 "register_reset MyIngress.syn_count",
                 "register_reset MyIngress.bloqueado"]
-    if i["acao"] == "bloquear":
+    if i["acao"] == "bloquear": //bloqueia o host
         return [f"table_add MyIngress.acl MyIngress.drop {i['host']} =>"]
     if i["acao"] == "liberar":
         h = handle_de(i["host"])
@@ -84,7 +81,7 @@ def traduzir(i):
 
 
 def handle_de(ip):
-    """table_delete precisa do 'handle' da entrada; achamos ele no table_dump"""
+    # procura o handle que bloqueia o host pra caso o operador queira liberar depois
     chave = "".join(f"{int(x):02x}" for x in ip.split("."))     # 10.0.1.1 -> 0a000101
     handle = None
     for linha in cli("table_dump MyIngress.acl").splitlines():
@@ -94,8 +91,9 @@ def handle_de(ip):
             return handle
     return None
 
+######################## A S S U R A N C E  ############################
+# Lê o que ta no switch e mostra pro operador
 
-# ---------- [3] assurance: ler o que esta no switch ----------
 def reg(nome, idx=0):
     m = re.search(r"=\s*(\d+)", cli(f"register_read {nome} {idx}"))
     return int(m.group(1)) if m else 0
@@ -115,6 +113,7 @@ def status():
     print("  regras 'bloquear host':\n    " + cli("table_dump MyIngress.acl").replace("\n", "\n    "))
     print("  ativas   :", " | ".join(ATIVAS.values()) or "nenhuma")
 
+################    E X E C U Ç Ã O   D O   C I C L O  ###################
 
 def executar(frase):
     try:
@@ -130,11 +129,11 @@ def executar(frase):
         saida = cli(cmd)
         if saida:
             print("           ->", saida.splitlines()[-1])
-    # "bloquear h1 por 30 segundos": o controlador agenda a liberacao
+    # controlador agenda a liberacao se o cara der o tempo
     if intencao["acao"] == "bloquear" and intencao["duracao_s"]:
         threading.Timer(intencao["duracao_s"],
                         lambda: executar(f"liberar {intencao['host']}")).start()
-    # lembra o que esta em vigor: bloquear adiciona, liberar/desligar remove
+    # só lembra quais intenções tão ativas
     chave = intencao.get("host", "scan")
     if intencao["acao"] in ("detectar_scan", "bloquear"):
         ATIVAS[chave] = frase
@@ -144,6 +143,8 @@ def executar(frase):
 
 
 if __name__ == "__main__":
+    # uso: python3 intent.py            -> interativo
+    #      python3 intent.py "frase"    -> uma intencao so
     if len(sys.argv) > 1:
         for frase in sys.argv[1:]:
             print(f"\nintent> {frase}")
