@@ -1,7 +1,7 @@
 {
   "target": "bmv2",
-  "p4info": "build/ibn_simple.p4.p4info.txtpb",
-  "bmv2_json": "build/ibn_simple.json",
+  "p4info": "build/ibn-scanblock.p4.p4info.txtpb",
+  "bmv2_json": "build/ibn-scanblock.json",
   "table_entries": [
     {
       "table": "MyIngress.ipv4_lpm",
