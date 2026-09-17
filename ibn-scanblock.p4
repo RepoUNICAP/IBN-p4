@@ -103,6 +103,8 @@ parser MyParser(packet_in packet,
     }
 }
 
+/*******************  A Ç Ã O - C O R R E S P O N D Ê N C I A  ***********/
+
 control MyVerifyChecksum(inout headers hdr, inout metadata meta) {
     apply {
         if (hdr.ipv4.isValid()) {
@@ -190,6 +192,8 @@ control MyComputeChecksum(inout headers hdr, inout metadata meta) {
             HashAlgorithm.csum16);
     }
 }
+
+/*************************  D E P A R S E R  ******************************/
 
 control MyDeparser(packet_out packet, in headers hdr) {
     apply {
