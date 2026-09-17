@@ -30,13 +30,13 @@ def duracao_em(frase):
 
 
 def cli(cmd):
-    # manda UMA unidade de uma sequencia d epontos para o simple_switch_CLI 
+    # manda UMA unidade de uma linha para o simple_switch_CLI 
     p = subprocess.run(["simple_switch_CLI", "--thrift-port", "9090"],
                        input=cmd + "\n", capture_output=True, text=True)
     return p.stdout.replace("RuntimeCmd: ", "").strip()
 
 ################  C A P T A Ç Ã O   D E   I N T E N Ç Ã O  #############
-# traduz a frase pra intenção do cara
+# traduz a frase pra intenção do operador
 
 def entender(frase):
     f = frase.lower()
@@ -143,8 +143,8 @@ def executar(frase):
 
 
 if __name__ == "__main__":
-    # uso: python3 intent.py            -> interativo
-    #      python3 intent.py "frase"    -> uma intencao so
+    # python3 intent.py -> interativo
+    #  python3 intent.py "frase" -> uma intencao so
     if len(sys.argv) > 1:
         for frase in sys.argv[1:]:
             print(f"\nintent> {frase}")

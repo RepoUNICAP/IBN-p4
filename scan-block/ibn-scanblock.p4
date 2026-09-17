@@ -161,7 +161,7 @@ control MyIngress(inout headers hdr,
 
     apply {
         if (hdr.ipv4.isValid()) {
-            /* 1) host bloqueado por intencao "bloquear host X"? (hit = ja foi p/ drop) */
+            /* host bloqueado? pacote dropado*/
             if (!acl.apply().hit) {
 
                 bit<32> idx;
@@ -170,7 +170,7 @@ control MyIngress(inout headers hdr,
                 hash(idx, HashAlgorithm.crc32, 32w0, { hdr.ipv4.srcAddr }, 32w1024);
                 bloqueado.read(b, idx);
 
-                /* 2) bloqueio do detector expirou? (so se a intencao deu um prazo) */
+                /* se o bloqueio expirou, a liberdade cantou*/
                 if (b == 1) {
                     bit<48> d;
                     bit<48> tb;
@@ -184,7 +184,7 @@ control MyIngress(inout headers hdr,
                 }
 
                 if (b == 1) {
-                    drop();                       /* continua bloqueado: descarta tudo dele */
+                    drop(); /* continua bloqueado: descarta tudo dele */
                 } else {
                     /* 3) detector: conta SYN "puro" por host dentro da janela */
                     bit<1> scanner = 0;

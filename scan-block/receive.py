@@ -2,9 +2,7 @@
 # Adaptado do receive.py do tutorial basic_tunnel.
 # Roda no SERVIDOR (h2) e mostra, em uma linha, cada pacote TCP que CHEGA.
 # Durante a varredura voce ve um SYN por porta... ate o switch bloquear
-# a origem: a partir dai a tela para de rolar.
-#
-#   mininet> xterm h2        (no xterm)  python3 traffic/receive.py [-v]
+
 import os
 import sys
 
